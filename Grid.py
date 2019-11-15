@@ -23,7 +23,7 @@ class Grid:
         ValueError: Grid dimensions must be positive integers
         """
 
-        if not isinstance(width, int) or not isinstance(height, int):
+        if type(width) != int or type(height) != int:
             raise TypeError("Grid dimensions must be positive integers")
         elif width <= 0 or height <= 0:
             raise ValueError("Grid dimensions must be positive integers")
@@ -53,7 +53,7 @@ class Grid:
         ValueError: x and y must be in the grid's dimensions
         """
 
-        if not isinstance(x, int) or not isinstance(y, int):
+        if type(x) != int or type(y) != int:
             raise TypeError("x and y must be positive integers")
         elif not x in range(self.__width) or y not in range(self.__height):
             raise ValueError("x and y must be in the grid's dimensions")
@@ -78,8 +78,8 @@ class Grid:
         ...
         TypeError: wall must be a list of length 3
         """
-        if not isinstance(wall, list) or len(wall) != 3:
-            raise TypeError("wall must be a list of length 3")
+        if type(wall) not in {list, tuple} or len(wall) != 3:
+            raise TypeError("wall must be a list (or a tuple) of length 3")
 
         x, y, direction = wall
 
