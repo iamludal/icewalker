@@ -84,6 +84,26 @@ class Cell:
         self.__content = content
 
     def add_wall(self, direction):
+        """ Add a wall to the cell
+
+        :param direction: (str) the direction
+        :UC: direction in {'E', 'S'}
+        :raises ValueError: if the direction doesn't match the UC
+        :Examples:
+        >>> c = Cell()
+        >>> 'E' in c.get_walls()
+        False
+        >>> c.add_wall('E')
+        >>> 'E' in c.get_walls()
+        True
+        >>> c.add_wall('S')
+        >>> c.get_walls().issubset({'E', 'S'})
+        True
+        >>> c.add_wall('N')
+        Traceback (most recent call last):
+        ...
+        ValueError: direction must be either 'E' or 'S'
+        """
 
         if direction not in {'E', 'S'}:
             raise ValueError("direction must be either 'E' or 'S'")
