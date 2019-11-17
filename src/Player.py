@@ -60,6 +60,14 @@ class Player:
         """
         return self.__x, self.__y
 
+    def set_coordinates(self, x, y):
+        if type(x) != int or type(y) != int:
+            raise TypeError('x and y coordinates must be positive integers')
+        elif x < 0 or y < 0:
+            raise ValueError('x and y coodinates must be positive integers')
+
+        self.__x, self.__y = x, y
+
     def get_n(self):
         """ Return the number of the player
 
