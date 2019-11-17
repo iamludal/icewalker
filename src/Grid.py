@@ -94,7 +94,8 @@ class Grid:
 
         self.get_cell(x, y).add_wall(direction)
 
-    def from_file(filename):
+    @classmethod
+    def from_file(cls, filename):
 
         try:
             with open(filename) as f:
@@ -108,7 +109,7 @@ class Grid:
             dimensions = data['dimensions']
             width, height = dimensions['width'], dimensions['height']
 
-            g = Grid(width, height)
+            g = cls(width, height)
 
             final_cell_coordinates = data['final_cell']
 
@@ -132,7 +133,7 @@ class Grid:
         except KeyError:
             exit("Invalid config file.")
 
-        return g
+        return g, players
 
     def set_player(self, player):
         x, y = player.get_coordinates()
