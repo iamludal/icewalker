@@ -1,4 +1,7 @@
 from Cell import Cell
+from Player import Player
+import json
+from json.decoder import JSONDecodeError
 
 
 class Grid:
@@ -90,6 +93,50 @@ class Grid:
         x, y, direction = wall
 
         self.get_cell(x, y).add_wall(direction)
+
+    def from_file(filename):
+
+        try:
+            with open(filename) as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            exit("Error: file not found")
+        except JSONDecodeError:
+            exit("Error: wrong file type. You must use a JSON file")
+
+        try:
+            dimensions = data['dimensions']
+            width, height = dimensions['width'], dimensions['height']
+
+            g = Grid(width, height)
+
+            final_cell_coordinates = data['final_cell']
+
+            g.get_cell(*final_cell_coordinates).set_final_cell()
+
+            main_player = data['players']['main']
+            other_players = data['players']['others']
+
+            main_player = Player(*main_player, 0)
+            other_players = [Player(*p, i)
+                             for i, p in enumerate(other_players, 1)]
+
+            players = [main_player] + other_players
+
+            for wall in data['walls']:
+                g.add_wall(wall)
+
+            for player in players:
+                g.set_player(player)
+
+        except KeyError:
+            exit("Invalid config file.")
+
+        return g
+
+    def set_player(self, player):
+        x, y = player.get_coordinates()
+        self.get_cell(x, y).set_content(player)
 
     def __str__(self):
         """ Draw the grid
