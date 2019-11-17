@@ -12,10 +12,8 @@ class Player:
         :raises ValueError: if x, y or n is less than 0
         :Examples:
         >>> p = Player(1, 2, 0)
-        >>> p.get_x()
-        1
-        >>> p.get_y()
-        2
+        >>> p.get_coordinates()
+        (1, 2)
         >>> p.get_n()
         0
         >>> p = Player(-1, 2, 0) 
@@ -29,7 +27,7 @@ class Player:
         >>> p = Player(2, 3, -5)
         Traceback (most recent call last):
         ...
-        ValueError: Player number must be a positive integer
+        ValueError: Player number must be an integer in [0, 10]
         """
 
         if type(x) != int:
@@ -43,35 +41,24 @@ class Player:
             raise ValueError("y coordinate must be a positive integer")
 
         if type(n) != int:
-            raise TypeError("Player number must be a positive integer")
-        elif n < 0:
-            raise ValueError("Player number must be a positive integer")
+            raise TypeError("Player number must be an integer in [0, 10]")
+        elif n not in range(11):
+            raise ValueError("Player number must be an integer in [0, 10]")
 
         self.__x = x
         self.__y = y
         self.__n = n
 
-    def get_x(self):
-        """ Return the x coordinate of the Player
+    def get_coordinates(self):
+        """ Return the coordinates of the Player
 
-        :return: (int) the x coordinate
+        :return: (tuple) the coordinates
         :Examples:
         >>> p = Player(3, 2, 0)
-        >>> p.get_x() == 3
-        True
+        >>> p.get_coordinates()
+        (3, 2)
         """
-        return self.__x
-
-    def get_y(self):
-        """ Return the y coordinate of the Player
-
-        :return: (int) the y coordinate
-        :Examples:
-        >>> p = Player(3, 2, 0)
-        >>> p.get_y() == 2
-        True
-        """
-        return self.__y
+        return self.__x, self.__y
 
     def get_n(self):
         """ Return the number of the player
@@ -110,7 +97,7 @@ class Player:
         >>> p
         Player 0
         """
-        return "Player {}".format(self)
+        return "Player {}".format(self.__n)
 
 
 if __name__ == "__main__":
