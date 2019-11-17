@@ -55,10 +55,16 @@ class Grid:
 
         if type(x) != int or type(y) != int:
             raise TypeError("x and y must be positive integers")
-        elif not x in range(self.__width) or y not in range(self.__height):
+        elif not x in range(self.get_width()) or y not in range(self.get_height()):
             raise ValueError("x and y must be in the grid's dimensions")
 
         return self.__grid[y][x]
+
+    def get_height(self):
+        return self.__height
+
+    def get_width(self):
+        return self.__width
 
     def add_wall(self, wall):
         """ Add a wall to a certain cell
@@ -76,7 +82,7 @@ class Grid:
         >>> g.add_wall([1, 2])
         Traceback (most recent call last):
         ...
-        TypeError: wall must be a list of length 3
+        TypeError: wall must be a list (or a tuple) of length 3
         """
         if type(wall) not in {list, tuple} or len(wall) != 3:
             raise TypeError("wall must be a list (or a tuple) of length 3")
@@ -85,13 +91,13 @@ class Grid:
 
         self.get_cell(x, y).add_wall(direction)
 
-    def draw(self):
+    def __str__(self):
         """ Draw the grid
 
         :Examples:
         >>> g = Grid(3, 3)
         >>> g.add_wall([0, 2, 'E'])
-        >>> g.draw()
+        >>> print(g)
         +-+-+-+
         |     |
         +     +
@@ -100,7 +106,7 @@ class Grid:
         | |   |
         +-+-+-+
         >>> g.add_wall([0, 0, 'E'])
-        >>> g.draw()
+        >>> print(g)
         +-+-+-+
         | |   |
         +     +
@@ -111,7 +117,7 @@ class Grid:
         >>> g.add_wall([1, 0, 'S'])
         >>> g.add_wall([0, 0, 'E'])
         >>> g.add_wall([1, 0, 'E'])
-        >>> g.draw()
+        >>> print(g)
         +-+-+-+
         | | | |
         + +-+ +
@@ -121,7 +127,7 @@ class Grid:
         +-+-+-+
         >>> g.add_wall([1, 1, 'E'])
         >>> g.add_wall([1, 1, 'S'])
-        >>> g.draw()
+        >>> print(g)
         +-+-+-+
         | | | |
         + +-+ +
@@ -130,7 +136,7 @@ class Grid:
         | |   |
         +-+-+-+
         >>> g.add_wall([2, 1, 'S'])
-        >>> g.draw()
+        >>> print(g)
         +-+-+-+
         | | | |
         + +-+ +
@@ -141,7 +147,7 @@ class Grid:
         >>> g = Grid(4, 3)
         >>> g.add_wall([1, 0, 'E'])
         >>> g.add_wall([1, 1, 'E'])
-        >>> g.draw()
+        >>> print(g)
         +-+-+-+-+
         |   |   |
         +   +   +
@@ -151,24 +157,24 @@ class Grid:
         +-+-+-+-+
         """
 
-        print('+-' * self.__width + '+')  # top border
+        grid = '+-' * self.get_width() + '+' + '\n'  # top border
 
         for y, line in enumerate(self.__grid):
 
-            print('|', end='')
+            grid += '|'  # left border
 
             for cell in line:
-                print(cell, end='')
+                grid += str(cell)
 
             # To start a new line
-            print()
+            grid += '\n'
 
             # Last line
-            if y + 1 >= self.__height:
+            if y + 1 >= self.get_height():
                 break
 
             # Other lines
-            print('+', end='')  # start of the 2nd line
+            grid += '+'  # start of the 2nd line
 
             for x, cell in enumerate(line):
 
@@ -176,35 +182,37 @@ class Grid:
                 S_in_cell_walls = 'S' in cell.get_walls()
 
                 if S_in_cell_walls:
-                    print('-', end='')
+                    grid += '-'
                 else:
-                    print(' ', end='')
+                    grid += ' '
 
                 E_in_south_cell = 'E' in self.get_cell(x, y+1).get_walls() \
-                    if y + 1 < self.__height else False
+                    if y + 1 < self.get_height() else False
                 S_in_east_cell = 'S' in self.get_cell(x+1, y).get_walls() \
-                    if x + 1 < len(line) else False
+                    if x + 1 < self.get_width() else False
 
-                if x >= self.__width - 1:
+                if x >= self.get_width() - 1:
                     break
                 elif E_in_cell_walls and S_in_cell_walls:
-                    print('+', end='')
+                    grid += '+'
                 elif E_in_cell_walls and S_in_east_cell:
-                    print('+', end='')
+                    grid += '+'
                 elif S_in_cell_walls and E_in_south_cell:
-                    print('+', end='')
+                    grid += '+'
                 elif E_in_south_cell and S_in_east_cell:
-                    print('+', end='')
+                    grid += '+'
                 elif S_in_cell_walls and S_in_east_cell:
-                    print('+', end='')
+                    grid += '+'
                 elif E_in_cell_walls and E_in_south_cell:
-                    print('+', end='')
+                    grid += '+'
                 else:
-                    print(' ', end='')
+                    grid += ' '
 
-            print('+')  # end of the 2nd line
+            grid += '+' + '\n'  # right border
 
-        print('+-' * self.__width + '+')  # bottom border
+        grid += '+-' * self.get_width() + '+'  # bottom border
+
+        return grid
 
 
 if __name__ == "__main__":
