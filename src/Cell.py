@@ -13,6 +13,7 @@ class Cell:
         >>> c.get_content() # Return nothing since it's None
         """
         self.__content = None
+        self.__final = False
         self.__walls = set()
 
     def is_final_cell(self):
@@ -27,7 +28,7 @@ class Cell:
         >>> c.is_final_cell()
         True
         """
-        return self.__content == '☐'
+        return self.__final
 
     def set_final_cell(self):
         """ Define the current cell as the final one
@@ -38,7 +39,7 @@ class Cell:
         >>> c.is_final_cell()
         True
         """
-        self.__content = '☐'
+        self.__final = True
 
     def is_empty(self):
         """ Return a boolean value that says whether or not the cell is empty
@@ -54,7 +55,7 @@ class Cell:
         >>> c.is_empty()
         False
         """
-        return self.__content == None
+        return self.__content is None
 
     def get_content(self):
         """ Get the content of the current cell
@@ -63,8 +64,10 @@ class Cell:
         >>> c = Cell()
         >>> c.get_content() # Returns nothing since it's 'None'
         >>> c.set_final_cell()
+        >>> c.get_content() # Returns nothing since it's 'None'
+        >>> c.set_content(2)
         >>> c.get_content()
-        '☐'
+        2
         """
         return self.__content
 
@@ -140,10 +143,10 @@ class Cell:
         '  '
         >>> c.set_final_cell()
         >>> str(c)
-        '☐ '
+        'o '
         >>> c.add_wall('E')
         >>> str(c)
-        '☐|'
+        'o|'
         >>> from Player import Player
         >>> p = Player(1, 2, 0)
         >>> c.set_content(p)
@@ -152,7 +155,7 @@ class Cell:
         """
 
         if self.is_empty():
-            string = ' '
+            string = 'o' if self.is_final_cell() else ' '
         else:
             string = str(self.__content)
 
