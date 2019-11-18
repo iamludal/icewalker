@@ -54,8 +54,6 @@ class Game:
 
             if self.get_state() == GameState.winning:
                 exit("You win!")
-            else:
-                self.play()
 
     def next_step(self, num, direction):
         player = self.__players[num]
@@ -107,6 +105,9 @@ class Game:
             return GameState.winning
         else:
             return GameState.unfinished
+
+    def get_grid(self):
+        return self.__grid
 
     def __str__(self):
         return str(self.__grid)
