@@ -30,8 +30,6 @@ class Game:
 
     def play(self):
 
-        print(self.__grid)
-
         play = input("Your play 'num, direction' or 'q' (quit):").strip()
 
         if play.lower() == 'q':
