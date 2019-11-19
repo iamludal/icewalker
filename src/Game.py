@@ -1,5 +1,4 @@
 from Grid import Grid
-from Errors import PlayerNotFoundError
 from Player import Player
 import json
 from enum import Enum
@@ -17,6 +16,10 @@ class GameState(Enum):
     """
     winning = 1
     unfinished = 2
+
+
+class PlayerNotFoundError:
+    pass
 
 
 class Game:
