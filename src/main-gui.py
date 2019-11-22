@@ -1,5 +1,5 @@
 from json.decoder import JSONDecodeError
-from Game import Game, GameState
+from Game import Game
 import pygame
 
 # Constants declarations
@@ -208,7 +208,7 @@ def main():
     select_player(selected)
     render(win, grid)
 
-    while game.get_state() != GameState.winning:
+    while not game.winning():
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP:
                 selected = handle_click_event(grid, selected)

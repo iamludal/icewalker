@@ -1,4 +1,4 @@
-from Game import Game, GameState
+from Game import Game
 
 
 def main():
@@ -11,7 +11,7 @@ def main():
 
     game = Game(filename)
 
-    while game.get_state() != GameState.winning:
+    while not game.winning():
         print(game)
         game.play()
 

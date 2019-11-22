@@ -1,24 +1,12 @@
 from Grid import Grid
 from Player import Player
 import json
-from enum import Enum
 
 
-class GameState(Enum):
+class PlayerNotFoundError(Exception):
+    """ A class to define an error that is thrown when the user
+    inputs a number that doesn't correspond to any player
     """
-    A class to define an enumerated type with three values :
-
-    * ``winning``
-    * ``losing``
-    * ``unfinished``
-
-    for the three state of ice walker game.
-    """
-    winning = 1
-    unfinished = 2
-
-
-class PlayerNotFoundError:
     pass
 
 
@@ -96,13 +84,10 @@ class Game:
 
             self.next_step(num, direction)
 
-    def get_state(self):
+    def winning(self):
         x, y = self.__players[0].get_coordinates()
 
-        if self.__grid.get_cell(x, y).is_final_cell():
-            return GameState.winning
-        else:
-            return GameState.unfinished
+        return self.__grid.get_cell(x, y).is_final_cell()
 
     def get_grid(self):
         return self.__grid
