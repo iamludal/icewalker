@@ -53,9 +53,6 @@ class Game:
         else:
             self.next_step(num, direction)
 
-            if self.get_state() == GameState.winning:
-                exit("You win!")
-
     def next_step(self, num, direction):
         player = self.__players[num]
         x, y = player.get_coordinates()
