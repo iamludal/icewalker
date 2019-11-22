@@ -205,22 +205,17 @@ def main():
     grid = game.get_grid()
     win = pygame.display.set_mode((width*CELL_SIZE, height*CELL_SIZE))
     selected = 0  # default selected player
-    winning = False
-    select_player(number)
+    select_player(selected)
     render(win, grid)
 
-    while not winning:
+    while game.get_state() != GameState.winning:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP:
                 selected = handle_click_event(grid, selected)
 
             elif event.type == pygame.KEYUP and event.key in KEY_DIRECTIONS:
                 game.next_step(selected, KEY_DIRECTIONS[event.key])
-
-                if game.get_state() == GameState.winning:
-                    winning = True
-                else:
-                    render(win, grid)
+                render(win, grid)
 
             # QUIT
             elif event.type == pygame.QUIT:
