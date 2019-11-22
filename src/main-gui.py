@@ -1,13 +1,12 @@
+from json.decoder import JSONDecodeError
 from Game import Game, GameState
 import pygame
-from json.decoder import JSONDecodeError
-
 
 # Constants declarations
 CELL_SIZE = 60
+BORDER = 4
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-BORDER = 4
 CYAN = (175, 240, 240)
 GRAY = (50, 180, 180)
 LEO = pygame.image.load("../images/weinberg.png")
@@ -23,12 +22,32 @@ IMG = [EW, NOE, LEO, MEFT]
 KEY_DIRECTIONS = {273: 'N', 274: 'S', 275: 'E', 276: 'W'}
 
 
-def render_final_cell(win, color, x, y):
+def render_final_cell(win, color, pos):
+    """ Render the final cell into the window
+
+    :param win: (pygame.Surface) the window in which to render the final cell
+    :param color: (tuple) the fill color of the final cell
+    :param pos: (tuple) the final cell's coordinates : (x, y)
+    :UC: len(color) == 3 and all(0 <= i <= 255 for i in color)
+         len(pos) == 2 and all(0 <= i for i in pos)
+    """
+    x, y = pos
     pygame.draw.rect(win, color,
-                    (x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                     (x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
 
-def render_wall(win, color, direction, x, y):
+def render_wall(win, color, direction, pos):
+    """ Render a wall in the window
+
+    :param win: (pygame.Surface) the window in which to render the wall
+    :param color: (tuple) the fill color of the wall
+    :param direction: (str) the direction of the wall
+    :param pos: (tuple) the wall's coordinates: (x, y)
+    :UC: direction in {'E', 'S'}
+         len(color) == 3 and all(0 <= i <= 255 for i in color)
+         len(pos) == 2 and all(0 <= i for i in pos)
+    """
+    x, y = pos
 
     if direction == 'S':
         width = CELL_SIZE
@@ -41,33 +60,40 @@ def render_wall(win, color, direction, x, y):
         height = CELL_SIZE
         x = (x+1)*CELL_SIZE
         y = y*CELL_SIZE
-        
+
     pygame.draw.rect(win, color, (x, y, width, height))
 
 
 def render_player(win, player):
+    """ Render a player in the window
+
+    :param win: (pygame.Surface) the window in which to render the player
+    :param player: (Player) the player to render
+    :UC: None
+    """
     x, y = player.get_coordinates()
-    win.blit(IMG[player.get_n()],
-            (x*CELL_SIZE + BORDER, y*CELL_SIZE + BORDER))
+    n = player.get_n()
+    win.blit(IMG[n], (x*CELL_SIZE + BORDER, y*CELL_SIZE + BORDER))
+
 
 def draw_main_surface(win, color, dimensions):
+    """ Draw the main surface in the window
+
+    :param win: (pygame.Surface) the window in which to draw the surface
+    :param color: (tuple) the color of the surface
+    :param dimensions: (tuple) the dimensions of the surface
+    :UC: len(color) == 3 and all(0 <= i <= 255 for i in color)
+         len(dimensions) == 2 and all(0 <= i for i in dimensions)
+    """
     width, height = dimensions
 
     pygame.draw.rect(win, color, (BORDER, BORDER,
                                   width*CELL_SIZE - BORDER*2,
                                   height*CELL_SIZE - BORDER*2))
 
-def get_corresponding_player(grid, pos):
-    mouse_x, mouse_y = pos
-    x, y = mouse_x // CELL_SIZE, mouse_y // CELL_SIZE
-    cell = grid.get_cell(x, y)
-
-    if not cell.is_empty():
-        return cell.get_content().get_n()
-
 
 def render(win, grid):
-    """ Render the grid [grid] of the game in the pygame window [win]
+    """ Render the grid[grid] of the game in the pygame window[win]
 
     :param win: (pygame.Surface) the pygame window in which you render the grid
     :param grid: (Grid) the gruid to render
@@ -75,6 +101,7 @@ def render(win, grid):
     """
     width, height = grid.get_width(), grid.get_height()
 
+    win.fill(BLACK)
     draw_main_surface(win, WHITE, (width, height))
 
     for x in range(width):
@@ -83,17 +110,25 @@ def render(win, grid):
             walls = cell.get_walls()
 
             if cell.is_final_cell():
-                render_final_cell(win, CYAN, x, y)
+                render_final_cell(win, CYAN, (x, y))
 
             if not cell.is_empty():
                 player = cell.get_content()
-                render_player(win, player)   
+                render_player(win, player)
 
             for wall in walls:
-                render_wall(win, BLACK, wall, x, y)
+                render_wall(win, BLACK, wall, (x, y))
+
+    pygame.display.update()
 
 
 def load_file(filename):
+    """ Load a game configuration from a JSON file
+
+    :param filename: (str) the path of the file to open
+    :return: (dict) the data of the configuration
+    :UC: filename.endswith(".json")
+    """
     try:
         with open(filename) as f:
             return json.load(f)
@@ -103,44 +138,99 @@ def load_file(filename):
         exit("The file couldn't be decoded.")
 
 
+def display_winning_screen(win):
+    """ Display the winning screen in the window
+
+    :param win: (pygame.Surface) the window in which to render the end screen
+    """
+    width, height = pygame.display.get_surface().get_size()
+    font = pygame.font.Font('freesansbold.ttf', 32)
+    text = font.render('You win!', True, BLACK)
+    textRect = text.get_rect()
+    textRect.center = (width // 2, height // 2)
+
+    win.fill(WHITE)
+    win.blit(text, textRect)
+    pygame.display.update()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+
+def select_player(n):
+    """ Set the pygame window title to the selected player
+
+    :param n: (int) the number of the selected player
+    :UC: 0 <= n < len(PROF)
+    """
+    pygame.display.set_caption("You selected: " + PROF[n])
+
+
+def handle_click_event(grid, initial_number):
+    """ Return the number of the player we clicked on, otherwise the
+    number of the player currently selected
+
+    :param grid: (Grid) the grid of the game
+    :param initial_number (int) the currently selected player
+    """
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    x, y = mouse_x // CELL_SIZE, mouse_y // CELL_SIZE
+    cell = grid.get_cell(x, y)
+
+    if not cell.is_empty():
+        number = cell.get_content().get_n()
+        select_player(number)
+        return number
+    else:
+        return initial_number
+
+
+def main():
+    """ main function of this module
+    """
+    pygame.init()
+
+    try:
+        filename = sys.argv[0]
+    except IndexError:
+        exit("You should enter a filename")
+
+    data = load_file(filename)
+    width, height = data['dimensions']['width'], data['dimensions']['height']
+    x, y = data["players"]["main"]
+
+    game = Game(filename)
+    grid = game.get_grid()
+    win = pygame.display.set_mode((width*CELL_SIZE, height*CELL_SIZE))
+    selected = 0  # default selected player
+    winning = False
+    select_player(number)
+    render(win, grid)
+
+    while not winning:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONUP:
+                selected = handle_click_event(grid, selected)
+
+            elif event.type == pygame.KEYUP and event.key in KEY_DIRECTIONS:
+                game.next_step(selected, KEY_DIRECTIONS[event.key])
+
+                if game.get_state() == GameState.winning:
+                    winning = True
+                else:
+                    render(win, grid)
+
+            # QUIT
+            elif event.type == pygame.QUIT:
+                pygame.quit()
+
+    display_winning_screen(win)
+
+
 if __name__ == "__main__":
     import sys
     import json
     sys.argv.pop(0)
-    pygame.init()
-
-    if len(sys.argv) >= 1:
-        filename = sys.argv[0]
-        data = load_file(filename)
-    else:
-        exit("You should enter a filename")
-
-    width, height = data['dimensions']['width'], data['dimensions']['height']
-    x, y = data["players"]["main"]
-
-    g = Game(filename)
-    grid = g.get_grid()
-    win = pygame.display.set_mode((width*CELL_SIZE, height*CELL_SIZE))
-    number = 0  # default selected player
-
-    while True:
-        # proceed events
-        for event in pygame.event.get():
-            # handle MOUSEBUTTONUP
-            if event.type == pygame.MOUSEBUTTONUP:
-                pos = pygame.mouse.get_pos()
-                number = get_corresponding_player(grid, pos)
-
-            elif event.type == pygame.KEYUP:
-                if event.key in KEY_DIRECTIONS:
-                    g.next_step(number, KEY_DIRECTIONS[event.key])
-
-                    if g.get_state() == GameState.winning:
-                        exit("You win!")
-
-            elif event.type == pygame.QUIT:
-                pygame.quit()
-
-        win.fill(BLACK)
-        render(win, grid)
-        pygame.display.update()
+    main()
