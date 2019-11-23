@@ -96,6 +96,11 @@ class Grid:
 
     @classmethod
     def from_file(cls, filename):
+        """ Load a grid from a JSON file
+
+        :param filename: (str) the path to the file to load
+        :UC: filename.endswith(".json")
+        """
 
         try:
             with open(filename) as f:
@@ -111,16 +116,16 @@ class Grid:
 
             g = cls(width, height)
 
-            final_cell_coordinates = data['final_cell']
+            final_cell_x, final_cell_y = data['final_cell']
 
-            g.get_cell(*final_cell_coordinates).set_final_cell()
+            g.get_cell(final_cell_x, final_cell_y).set_final_cell()
 
-            main_player = data['players']['main']
+            main_x, main_y = data['players']['main']
             other_players = data['players']['others']
 
-            main_player = Player(*main_player, 0)
-            other_players = [Player(*p, i)
-                             for i, p in enumerate(other_players, 1)]
+            main_player = Player(main_x, main_y, 0)
+            other_players = [Player(x, y, i)
+                             for i, (x, y) in enumerate(other_players, 1)]
 
             players = [main_player] + other_players
 
@@ -136,6 +141,10 @@ class Grid:
         return g, players
 
     def set_player(self, player):
+        """ Set a player on the grid depending on its coordinates
+
+        :param player: (Player) the player to set on the grid
+        """
         x, y = player.get_coordinates()
         self.get_cell(x, y).set_content(player)
 
