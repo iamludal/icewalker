@@ -18,7 +18,7 @@ class Game:
 
     def play(self):
 
-        play = input("Your play 'num, direction' or 'q' (quit):").strip()
+        play = input("Your play 'num, direction' or 'q' (quit): ").strip()
 
         if play.lower() == 'q':
             exit("You just gave up the game")
@@ -41,53 +41,70 @@ class Game:
         else:
             self.next_step(num, direction)
 
-    def next_step(self, num, direction):
-        player = self.__players[num]
-        x, y = player.get_coordinates()
+    def player_can_move(self, pos, direction, grid):
+        x, y = pos
 
-        if x == 0 and direction == 'W':
-            return
-        elif y == 0 and direction == 'N':
-            return
-        elif x == self.__grid.get_width() - 1 and direction == 'E':
-            return
-        elif y == self.__grid.get_height() - 1 and direction == 'S':
-            return
+        if x <= 0 and direction == 'W':
+            return False
+        elif y <= 0 and direction == 'N':
+            return False
+        elif x >= grid.get_width() - 1 and direction == 'E':
+            return False
+        elif y >= grid.get_height() - 1 and direction == 'S':
+            return False
+        else:
+            return True
+
+    def get_new_position(self, pos, direction, grid):
+        x, y = pos
 
         if direction == 'W':
-            wall = 'E' in self.__grid.get_cell(x-1, y).get_walls()
+            player_is_blocked = 'E' in grid.get_cell(x-1, y).get_walls()
             new_x = x - 1
             new_y = y
 
         elif direction == 'E':
-            wall = 'E' in self.__grid.get_cell(x, y).get_walls()
+            player_is_blocked = 'E' in grid.get_cell(x, y).get_walls()
             new_x = x + 1
             new_y = y
 
         elif direction == 'S':
-            wall = 'S' in self.__grid.get_cell(x, y).get_walls()
+            player_is_blocked = 'S' in grid.get_cell(x, y).get_walls()
             new_y = y + 1
             new_x = x
 
         elif direction == 'N':
-            wall = 'S' in self.__grid.get_cell(x, y-1).get_walls()
+            player_is_blocked = 'S' in grid.get_cell(x, y-1).get_walls()
             new_y = y - 1
             new_x = x
 
-        next_cell = self.__grid.get_cell(new_x, new_y)
+        return new_x, new_y, player_is_blocked
 
-        if (next_cell.is_empty() or next_cell.is_final_cell()) and not wall:
-            # Update grid cells and player's position
-            player.set_coordinates(new_x, new_y)
-            self.__grid.get_cell(x, y).set_content(None)
-            self.__grid.set_player(player)
+    def move_player(self, player, pos, grid):
+        x, y = player.get_coordinates()
+        player.set_coordinates(*pos)
+        grid.get_cell(x, y).set_content(None)
+        grid.set_player(player)
 
+    def next_step(self, num, direction):
+        player = self.__players[num]
+        x, y = pos = player.get_coordinates()
+        grid = self.get_grid()
+
+        if not self.player_can_move(pos, direction, grid):
+            return
+
+        new_x, new_y, player_is_blocked = self.get_new_position(pos,
+                                                                direction, grid)
+        next_cell = grid.get_cell(new_x, new_y)
+
+        if next_cell.is_empty() and not player_is_blocked:
+            self.move_player(player, (new_x, new_y), grid)
             self.next_step(num, direction)
 
     def winning(self):
         x, y = self.__players[0].get_coordinates()
-
-        return self.__grid.get_cell(x, y).is_final_cell()
+        return self.get_grid().get_cell(x, y).is_final_cell()
 
     def get_grid(self):
         return self.__grid
