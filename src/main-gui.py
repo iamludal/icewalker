@@ -139,22 +139,6 @@ def render(win, grid):
     pygame.display.update()
 
 
-def load_file(filename):
-    """ Load a game configuration from a JSON file
-
-    :param filename: (str) the path of the file to open
-    :return: (dict) the data of the configuration
-    :UC: filename.endswith(".json")
-    """
-    try:
-        with open(filename) as f:
-            return json.load(f)
-    except FileNotFoundError:
-        exit("The file doesn't exist.")
-    except JSONDecodeError:
-        exit("The file couldn't be decoded.")
-
-
 def display_screen_with_text(win, text):
     """ Display the winning screen in the window
 
@@ -215,12 +199,9 @@ def main():
     except IndexError:
         exit("You should enter a filename")
 
-    data = load_file(filename)
-    width, height = data['dimensions']['width'], data['dimensions']['height']
-    x, y = data["players"]["main"]
-
     game = Game(filename)
     grid = game.get_grid()
+    width, height = grid.get_width(), grid.get_height()
     win = pygame.display.set_mode((width*CELL_SIZE, height*CELL_SIZE))
     selected = 0  # default selected player
     select_player(selected)
