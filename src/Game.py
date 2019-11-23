@@ -16,6 +16,10 @@ class Game:
         self.__grid, self.__players = Grid.from_file(filename)
         self.__nb_of_players = len(self.__players)
 
+        self.__grid.get_cell(5, 4).thaw()
+        self.__grid.get_cell(10, 9).thaw()
+        self.__grid.get_cell(6, 14).thaw()
+
     def play(self):
 
         play = input("Your play 'num, direction' or 'q' (quit): ").strip()
@@ -93,6 +97,8 @@ class Game:
 
         if not self.player_can_move(pos, direction, grid):
             return
+        elif grid.get_cell(x, y).is_thawed():
+            return
 
         new_x, new_y, player_is_blocked = self.get_new_position(pos,
                                                                 direction, grid)
@@ -105,6 +111,11 @@ class Game:
     def winning(self):
         x, y = self.__players[0].get_coordinates()
         return self.get_grid().get_cell(x, y).is_final_cell()
+
+    def losing(self):
+        grid = self.get_grid()
+        coordinates = (p.get_coordinates() for p in self.__players)
+        return any(grid.get_cell(x, y).is_thawed() for (x, y) in coordinates)
 
     def get_grid(self):
         return self.__grid

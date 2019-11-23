@@ -8,7 +8,7 @@ BORDER = 4
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 CYAN = (175, 240, 240)
-GRAY = (50, 180, 180)
+GRAY = (200, 200, 200)
 LEO = pygame.image.load("../images/weinberg.png")
 NOE = pygame.image.load("../images/noe.png")
 EW = pygame.image.load("../images/ew.png")
@@ -34,6 +34,21 @@ def render_final_cell(win, color, pos):
     x, y = pos
     pygame.draw.rect(win, color,
                      (x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE))
+
+
+def render_thawed_cell(win, color, pos):
+    """ Render a thawed cell into the window
+
+    :param win: (pygame.Surface) the window in which to render the thawed cell
+    :param color: (tuple) the fill color of thawed cells
+    :param pos: (tuple) the thawed cell's coordinates : (x, y)
+    :UC: len(color) == 3 and all(0 <= i <= 255 for i in color)
+         len(pos) == 2 and all(0 <= i for i in pos)
+    """
+    x, y = pos
+    pygame.draw.circle(win, color,
+                       (x*CELL_SIZE + CELL_SIZE//2, y*CELL_SIZE + CELL_SIZE//2),
+                       CELL_SIZE // 3)
 
 
 def render_wall(win, color, direction, pos):
@@ -111,6 +126,8 @@ def render(win, grid):
 
             if cell.is_final_cell():
                 render_final_cell(win, CYAN, (x, y))
+            elif cell.is_thawed():
+                render_thawed_cell(win, GRAY, (x, y))
 
             if not cell.is_empty():
                 player = cell.get_content()
@@ -138,14 +155,15 @@ def load_file(filename):
         exit("The file couldn't be decoded.")
 
 
-def display_winning_screen(win):
+def display_screen_with_text(win, text):
     """ Display the winning screen in the window
 
     :param win: (pygame.Surface) the window in which to render the end screen
+    :param text: (str) the string to display
     """
     width, height = pygame.display.get_surface().get_size()
     font = pygame.font.Font('freesansbold.ttf', 32)
-    text = font.render('You win!', True, BLACK)
+    text = font.render(text, True, BLACK)
     textRect = text.get_rect()
     textRect.center = (width // 2, height // 2)
 
@@ -208,7 +226,7 @@ def main():
     select_player(selected)
     render(win, grid)
 
-    while not game.winning():
+    while not (game.winning() or game.losing()):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP:
                 selected = handle_click_event(grid, selected)
@@ -221,7 +239,10 @@ def main():
             elif event.type == pygame.QUIT:
                 pygame.quit()
 
-    display_winning_screen(win)
+    if game.winning():
+        display_screen_with_text(win, "You win!")
+    elif game.losing():
+        display_screen_with_text(win, "You lose!")
 
 
 if __name__ == "__main__":

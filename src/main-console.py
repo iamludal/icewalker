@@ -11,11 +11,14 @@ def main():
 
     game = Game(filename)
 
-    while not game.winning():
+    while not (game.winning() or game.losing()):
         print(game)
         game.play()
 
-    exit("You win!")
+    if game.winning():
+        exit("You win!")
+    elif game.losing():
+        exit("You lose!")
 
 
 if __name__ == "__main__":

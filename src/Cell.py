@@ -14,6 +14,7 @@ class Cell:
         """
         self.__content = None
         self.__final = False
+        self.__thawed = False
         self.__walls = set()
 
     def is_final_cell(self):
@@ -40,6 +41,33 @@ class Cell:
         True
         """
         self.__final = True
+
+    def is_thawed(self):
+        """ Return a boolean value that says whether or not the cell is thawed
+
+        :return (bool) True if the cell is thawed, False otherwise
+        :Examples:
+        >>> c = Cell()
+        >>> c.is_thawed()
+        False
+        >>> c.thaw()
+        >>> c.is_thawed()
+        True
+        """
+        return self.__thawed
+
+    def thaw(self):
+        """ Thaw the cell
+
+        :Examples:
+        >>> c = Cell()
+        >>> c.is_thawed()
+        False
+        >>> c.thaw()
+        >>> c.is_thawed()
+        True
+        """
+        self.__thawed = True
 
     def is_empty(self):
         """ Return a boolean value that says whether or not the cell is empty
@@ -155,7 +183,12 @@ class Cell:
         """
 
         if self.is_empty():
-            string = 'o' if self.is_final_cell() else ' '
+            if self.is_final_cell():
+                string = 'x'
+            elif self.is_thawed():
+                string = 'o'
+            else:
+                string = ' '
         else:
             string = str(self.__content)
 
