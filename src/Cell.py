@@ -171,15 +171,19 @@ class Cell:
         '  '
         >>> c.set_final_cell()
         >>> str(c)
-        'o '
+        'x '
         >>> c.add_wall('E')
         >>> str(c)
-        'o|'
+        'x|'
         >>> from Player import Player
         >>> p = Player(1, 2, 0)
         >>> c.set_content(p)
         >>> str(c)
         '0|'
+        >>> c = Cell()
+        >>> c.thaw()
+        >>> str(c)
+        'o '
         """
 
         if self.is_empty():
