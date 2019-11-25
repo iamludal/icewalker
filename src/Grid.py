@@ -102,16 +102,19 @@ class Grid:
         """ Load a grid from a JSON file
 
         :param filename: (str) the path to the file to load
+        :return: (tuple) the newly created instance of the grid + the list
+            of players
         :UC: filename.endswith(".json")
+        
         """
 
         try:
             with open(filename) as f:
                 data = json.load(f)
         except FileNotFoundError:
-            exit("Error: file not found")
+            exit("File not found")
         except JSONDecodeError:
-            exit("Error: wrong file type. You must use a JSON file")
+            exit("The config is either badly-formed or not a JSON file.")
 
         try:
             dimensions = data['dimensions']
@@ -138,7 +141,7 @@ class Grid:
             for player in players:
                 g.set_player(player)
 
-        except KeyError:
+        except (KeyError, TypeError, ValueError):
             exit("Invalid config file.")
 
         return g, players
@@ -147,6 +150,17 @@ class Grid:
         """ Set a player on the grid depending on its coordinates
 
         :param player: (Player) the player to set on the grid
+        :return: None
+        :UC: player_x in range(grid_width), player_y in range(grid_height)
+        :Examples:
+
+        >>> p = Player(2, 4, 0)
+        >>> g = Grid(8, 8)
+        >>> g.get_cell(2, 4).is_empty()
+        True
+        >>> g.set_player(p)
+        >>> g.get_cell(2, 4).is_empty()
+        False
 
         """
         x, y = player.get_coordinates()
@@ -156,7 +170,7 @@ class Grid:
         """ Draw the grid
 
         :Examples:
-        
+
         >>> g = Grid(3, 3)
         >>> g.add_wall([0, 2, 'E'])
         >>> print(g)
