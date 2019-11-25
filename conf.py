@@ -55,9 +55,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = "List"
-copyright = "2018, , Univ. Lille"
-author = ""
+project = "Ice Walker"
+copyright = "2018, Ludovic Chombeau, Romain Follet, Univ. Lille"
+author = "Ludovic Chombeau, Romain Follet"
 
 
 
