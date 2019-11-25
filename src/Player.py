@@ -11,6 +11,7 @@ class Player:
         :raises TypeError: if x, y or n is not an integer
         :raises ValueError: if x, y or n is less than 0
         :Examples:
+
         >>> p = Player(1, 2, 0)
         >>> p.get_coordinates()
         (1, 2)
@@ -54,6 +55,7 @@ class Player:
 
         :return: (tuple) the coordinates
         :Examples:
+
         >>> p = Player(3, 2, 0)
         >>> p.get_coordinates()
         (3, 2)
@@ -73,6 +75,7 @@ class Player:
 
         :return: (int) the number
         :Examples:
+
         >>> p = Player(3, 2, 0)
         >>> p.get_n() == 0
         True
@@ -84,6 +87,7 @@ class Player:
 
         :return: (str) the string corresponding to the player
         :Examples:
+
         >>> p = Player(1, 2, 3)
         >>> str(p)
         '3'
@@ -98,6 +102,7 @@ class Player:
 
         :return: (str) a human readable string
         :Examples:
+        
         >>> p = Player(2, 2, 6)
         >>> p
         Player 6

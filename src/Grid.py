@@ -15,6 +15,7 @@ class Grid:
         :raises ValueError: if width < 0 or height < 0
         :UC: width > 0, height > 0
         :Examples:
+
         >>> g = Grid(2, 2)
         >>> g = Grid('E', 'S')
         Traceback (most recent call last):
@@ -46,6 +47,7 @@ class Grid:
         :return: (Cell) the corresponding cell
         :UC: x in range(grid_width) and y in range(grid_height)
         :Examples:
+
         >>> g = Grid(2, 2)
         >>> g.add_wall([1, 0, 'E'])
         >>> g.get_cell(1, 0)
@@ -76,8 +78,9 @@ class Grid:
             y are the coordinates of a cell in the grid and direction the
             direction of the wall to add
         :raises TypeError: if the list if not of the correct form
-        :UC: wall[3] in {'E', 'S'}
+        :UC: wall[2] in {'E', 'S'}
         :Examples:
+
         >>> g = Grid(3, 3)
         >>> g.add_wall([2, 2, 'E'])
         >>> g.get_cell(2, 2)
@@ -144,6 +147,7 @@ class Grid:
         """ Set a player on the grid depending on its coordinates
 
         :param player: (Player) the player to set on the grid
+
         """
         x, y = player.get_coordinates()
         self.get_cell(x, y).set_content(player)
@@ -152,6 +156,7 @@ class Grid:
         """ Draw the grid
 
         :Examples:
+        
         >>> g = Grid(3, 3)
         >>> g.add_wall([0, 2, 'E'])
         >>> print(g)

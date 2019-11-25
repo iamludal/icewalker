@@ -5,6 +5,7 @@ class Cell:
         """ Create a new cell for the icewalker grid
 
         :Examples:
+
         >>> c = Cell()
         >>> c.get_walls()
         set()
@@ -22,6 +23,7 @@ class Cell:
 
         :return: (bool) True if the cell if the final one
         :Examples:
+
         >>> c = Cell()
         >>> c.is_final_cell()
         False
@@ -35,6 +37,7 @@ class Cell:
         """ Define the current cell as the final one
 
         :Examples:
+
         >>> c = Cell()
         >>> c.set_final_cell()
         >>> c.is_final_cell()
@@ -44,9 +47,10 @@ class Cell:
 
     def is_thawed(self):
         """ Return a boolean value that says whether or not the cell is thawed
-
         :return (bool) True if the cell is thawed, False otherwise
+
         :Examples:
+
         >>> c = Cell()
         >>> c.is_thawed()
         False
@@ -60,6 +64,7 @@ class Cell:
         """ Thaw the cell
 
         :Examples:
+
         >>> c = Cell()
         >>> c.is_thawed()
         False
@@ -74,6 +79,7 @@ class Cell:
 
         :return: (bool) True if the cell is empty, False otherwise
         :Examples:
+
         >>> c = Cell()
         >>> c.is_empty()
         True
@@ -89,6 +95,7 @@ class Cell:
         """ Get the content of the current cell
 
         :Examples:
+
         >>> c = Cell()
         >>> c.get_content() # Returns nothing since it's 'None'
         >>> c.set_final_cell()
@@ -105,6 +112,7 @@ class Cell:
         :param content: (any) the content to put in the cell
         :UC: None
         :Examples:
+
         >>> c = Cell()
         >>> from Player import Player
         >>> p = Player(1, 2, 3)
@@ -121,6 +129,7 @@ class Cell:
         :UC: direction in {'E', 'S'}
         :raises ValueError: if the direction doesn't match the UC
         :Examples:
+
         >>> c = Cell()
         >>> 'E' in c.get_walls()
         False
@@ -146,6 +155,7 @@ class Cell:
 
         :return: (set) the walls around the cell
         :Examples:
+
         >>> c = Cell()
         >>> c.get_walls()
         set()
@@ -166,6 +176,7 @@ class Cell:
 
         :return: (str) the string corresponding to the cell
         :Examples:
+
         >>> c = Cell()
         >>> str(c)
         '  '
@@ -207,6 +218,7 @@ class Cell:
         """ Get a representation of the cell
 
         :Examples:
+
         >>> c = Cell()
         >>> c
         <BLANKLINE>
