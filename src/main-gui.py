@@ -1,4 +1,3 @@
-from json.decoder import JSONDecodeError
 from Game import Game
 import pygame
 
@@ -13,18 +12,21 @@ LEO = pygame.image.load("../images/weinberg.png")
 NOE = pygame.image.load("../images/noe.png")
 EW = pygame.image.load("../images/ew.png")
 MEFT = pygame.image.load("../images/meftali.png")
+FINAL = pygame.image.load("../images/fac.png")
+THAWED = pygame.image.load("../images/black-hole.png")
 LEO = pygame.transform.scale(LEO, (CELL_SIZE, CELL_SIZE))
 NOE = pygame.transform.scale(NOE, (CELL_SIZE, CELL_SIZE))
 EW = pygame.transform.scale(EW, (CELL_SIZE, CELL_SIZE))
 MEFT = pygame.transform.scale(MEFT, (CELL_SIZE, CELL_SIZE))
+FINAL = pygame.transform.scale(FINAL, (CELL_SIZE, CELL_SIZE))
+THAWED = pygame.transform.scale(THAWED, (CELL_SIZE, CELL_SIZE))
 PROF = ["E. Wegrzynowski", "L. Noé", "L. Weinberg", "S. Meftali"]
 IMG = [EW, NOE, LEO, MEFT]
 KEY_DIRECTIONS = {273: 'N', 274: 'S', 275: 'E', 276: 'W'}
 
 
-def render_final_cell(win, color, pos):
+def render_final_cell(win, pos):
     """ Render the final cell into the window
-
     :param win: (pygame.Surface) the window in which to render the final cell
     :param color: (tuple) the fill color of the final cell
     :param pos: (tuple) the final cell's coordinates : (x, y)
@@ -32,13 +34,11 @@ def render_final_cell(win, color, pos):
          len(pos) == 2 and all(0 <= i for i in pos)
     """
     x, y = pos
-    pygame.draw.rect(win, color,
-                     (x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE))
+    win.blit(FINAL, (x*CELL_SIZE + BORDER//2, y*CELL_SIZE + BORDER//2))
 
 
-def render_thawed_cell(win, color, pos):
+def render_thawed_cell(win, pos):
     """ Render a thawed cell into the window
-
     :param win: (pygame.Surface) the window in which to render the thawed cell
     :param color: (tuple) the fill color of thawed cells
     :param pos: (tuple) the thawed cell's coordinates : (x, y)
@@ -46,14 +46,12 @@ def render_thawed_cell(win, color, pos):
          len(pos) == 2 and all(0 <= i for i in pos)
     """
     x, y = pos
-    pygame.draw.circle(win, color,
-                       (x*CELL_SIZE + CELL_SIZE//2, y*CELL_SIZE + CELL_SIZE//2),
-                       CELL_SIZE // 3)
+    win.blit(THAWED, (x*CELL_SIZE + BORDER//2, y*CELL_SIZE + BORDER//2))
+
 
 
 def render_wall(win, color, direction, pos):
     """ Render a wall in the window
-
     :param win: (pygame.Surface) the window in which to render the wall
     :param color: (tuple) the fill color of the wall
     :param direction: (str) the direction of the wall
@@ -81,7 +79,6 @@ def render_wall(win, color, direction, pos):
 
 def render_player(win, player):
     """ Render a player in the window
-
     :param win: (pygame.Surface) the window in which to render the player
     :param player: (Player) the player to render
     :UC: None
@@ -93,7 +90,6 @@ def render_player(win, player):
 
 def draw_main_surface(win, color, dimensions):
     """ Draw the main surface in the window
-
     :param win: (pygame.Surface) the window in which to draw the surface
     :param color: (tuple) the color of the surface
     :param dimensions: (tuple) the dimensions of the surface
@@ -109,7 +105,6 @@ def draw_main_surface(win, color, dimensions):
 
 def render(win, grid):
     """ Render the grid[grid] of the game in the pygame window[win]
-
     :param win: (pygame.Surface) the pygame window in which you render the grid
     :param grid: (Grid) the gruid to render
     :UC: None
@@ -125,9 +120,9 @@ def render(win, grid):
             walls = cell.get_walls()
 
             if cell.is_final_cell():
-                render_final_cell(win, CYAN, (x, y))
+                render_final_cell(win, (x, y))
             elif cell.is_thawed():
-                render_thawed_cell(win, GRAY, (x, y))
+                render_thawed_cell(win, (x, y))
 
             if not cell.is_empty():
                 player = cell.get_content()
@@ -141,7 +136,6 @@ def render(win, grid):
 
 def display_screen_with_text(win, text):
     """ Display the winning screen in the window
-
     :param win: (pygame.Surface) the window in which to render the end screen
     :param text: (str) the string to display
     """
@@ -164,7 +158,6 @@ def display_screen_with_text(win, text):
 
 def select_player(n):
     """ Set the pygame window title to the selected player
-
     :param n: (int) the number of the selected player
     :UC: 0 <= n < len(PROF)
     """
@@ -174,7 +167,6 @@ def select_player(n):
 def handle_click_event(grid, initial_number):
     """ Return the number of the player we clicked on, otherwise the
     number of the player currently selected
-
     :param grid: (Grid) the grid of the game
     :param initial_number (int) the currently selected player
     """
@@ -231,5 +223,4 @@ def main():
 
 if __name__ == "__main__":
     import sys
-    import json
     main()
