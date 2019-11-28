@@ -25,29 +25,15 @@ IMG = [EW, NOE, LEO, MEFT]
 KEY_DIRECTIONS = {273: 'N', 274: 'S', 275: 'E', 276: 'W'}
 
 
-def render_final_cell(win, pos):
-    """ Render the final cell into the window
-    :param win: (pygame.Surface) the window in which to render the final cell
-    :param color: (tuple) the fill color of the final cell
+def render_cell(win, img, pos):
+    """ Render a cell into the window
+    :param win: (pygame.Surface) the window in which to render the cell
+    :param img: (pygame.Surface) the image to draw
     :param pos: (tuple) the final cell's coordinates : (x, y)
-    :UC: len(color) == 3 and all(0 <= i <= 255 for i in color)
-         len(pos) == 2 and all(0 <= i for i in pos)
+    :UC: len(pos) == 2 and all(0 <= i for i in pos)
     """
     x, y = pos
-    win.blit(FINAL, (x*CELL_SIZE + BORDER//2, y*CELL_SIZE + BORDER//2))
-
-
-def render_thawed_cell(win, pos):
-    """ Render a thawed cell into the window
-    :param win: (pygame.Surface) the window in which to render the thawed cell
-    :param color: (tuple) the fill color of thawed cells
-    :param pos: (tuple) the thawed cell's coordinates : (x, y)
-    :UC: len(color) == 3 and all(0 <= i <= 255 for i in color)
-         len(pos) == 2 and all(0 <= i for i in pos)
-    """
-    x, y = pos
-    win.blit(THAWED, (x*CELL_SIZE + BORDER//2, y*CELL_SIZE + BORDER//2))
-
+    win.blit(img, (x*CELL_SIZE + BORDER//2, y*CELL_SIZE + BORDER//2))
 
 
 def render_wall(win, color, direction, pos):
@@ -120,9 +106,9 @@ def render(win, grid):
             walls = cell.get_walls()
 
             if cell.is_final_cell():
-                render_final_cell(win, (x, y))
+                render_cell(win, FINAL, (x, y))
             elif cell.is_thawed():
-                render_thawed_cell(win, (x, y))
+                render_cell(win, THAWED, (x, y))
 
             if not cell.is_empty():
                 player = cell.get_content()
