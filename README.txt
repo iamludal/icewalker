@@ -4,11 +4,11 @@ How to use it ?
 1. Move into the src/ folder
 2. Open up a terminal and type in the following command:
 
-  $ python3 main-console.py ../data/example.json
-  (to play with the console)
+  $ python3 main-console.py ../data/[grid].json
+  (to play with the console, where grid is a grid from the data/ folder)
 
-  $ python3 main-gui.py ../data/examples.json
-  (to play with the graphical interface)
+  $ python3 main-gui.py ../data/[grid].json
+  (to play with the graphical interface, where grid is a grid from the data/ folder)
 
 
 
