@@ -195,7 +195,7 @@ def main():
     pygame.init()
 
     try:
-        filename = sys.argv[0]
+        filename = sys.argv[1]
     except IndexError:
         exit("You should enter a filename")
 
@@ -229,5 +229,4 @@ def main():
 if __name__ == "__main__":
     import sys
     import json
-    sys.argv.pop(0)
     main()
