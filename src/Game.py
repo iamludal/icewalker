@@ -16,10 +16,6 @@ class Game:
         self.__grid, self.__players = Grid.from_file(filename)
         self.__nb_of_players = len(self.__players)
 
-        self.__grid.get_cell(5, 4).thaw()
-        self.__grid.get_cell(10, 9).thaw()
-        self.__grid.get_cell(6, 14).thaw()
-
     def play(self):
 
         play = input("Your play 'num, direction' or 'q' (quit): ").strip()
@@ -63,26 +59,26 @@ class Game:
         x, y = pos
 
         if direction == 'W':
-            player_is_blocked = 'E' in grid.get_cell(x-1, y).get_walls()
+            blocked = 'E' in grid.get_cell(x-1, y).get_walls()
             new_x = x - 1
             new_y = y
 
         elif direction == 'E':
-            player_is_blocked = 'E' in grid.get_cell(x, y).get_walls()
+            blocked = 'E' in grid.get_cell(x, y).get_walls()
             new_x = x + 1
             new_y = y
 
         elif direction == 'S':
-            player_is_blocked = 'S' in grid.get_cell(x, y).get_walls()
+            blocked = 'S' in grid.get_cell(x, y).get_walls()
             new_y = y + 1
             new_x = x
 
         elif direction == 'N':
-            player_is_blocked = 'S' in grid.get_cell(x, y-1).get_walls()
+            blocked = 'S' in grid.get_cell(x, y-1).get_walls()
             new_y = y - 1
             new_x = x
 
-        return new_x, new_y, player_is_blocked
+        return new_x, new_y, blocked
 
     def move_player(self, player, pos, grid):
         x, y = player.get_coordinates()
@@ -100,13 +96,16 @@ class Game:
         elif grid.get_cell(x, y).is_thawed():
             return
 
-        new_x, new_y, player_is_blocked = self.get_new_position(pos,
-                                                                direction, grid)
+        new_x, new_y, blocked = self.get_new_position(pos, direction, grid)
         next_cell = grid.get_cell(new_x, new_y)
 
-        if next_cell.is_empty() and not player_is_blocked:
+        if next_cell.is_empty() and not blocked:
             self.move_player(player, (new_x, new_y), grid)
             self.next_step(num, direction)
+
+    def explore(self, player, direction):
+        self.next_step(player, direction)
+        return self.get_grid()
 
     def winning(self):
         x, y = self.__players[0].get_coordinates()
