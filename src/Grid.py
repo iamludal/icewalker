@@ -117,14 +117,13 @@ class Grid:
             exit("The config is either badly-formed or not a JSON file.")
 
         try:
-            dimensions = data['dimensions']
-            width, height = dimensions['width'], dimensions['height']
+            width, height = data["dimensions"]
 
-            g = cls(width, height)
+            grid = cls(width, height)
 
             final_cell_x, final_cell_y = data['final_cell']
 
-            g.get_cell(final_cell_x, final_cell_y).set_final_cell()
+            grid.get_cell(final_cell_x, final_cell_y).set_final_cell()
 
             main_x, main_y = data['players']['main']
             other_players = data['players']['others']
@@ -136,15 +135,18 @@ class Grid:
             players = [main_player] + other_players
 
             for wall in data['walls']:
-                g.add_wall(wall)
+                grid.add_wall(wall)
 
             for player in players:
-                g.set_player(player)
+                grid.set_player(player)
+
+            for x, y in data['thawed']:
+                grid.get_cell(x, y).thaw()
 
         except (KeyError, TypeError, ValueError):
             exit("Invalid config file.")
 
-        return g, players
+        return grid, players
 
     def set_player(self, player):
         """ Set a player on the grid depending on its coordinates
