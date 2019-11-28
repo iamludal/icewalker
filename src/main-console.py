@@ -5,7 +5,7 @@ def main():
     """ main function of this module
     """
     try:
-        filename = sys.argv[0]
+        filename = sys.argv[1]
     except IndexError:
         exit("You must provide a filename.")
 
@@ -23,5 +23,4 @@ def main():
 
 if __name__ == "__main__":
     import sys
-    sys.argv.pop(0)
     main()
