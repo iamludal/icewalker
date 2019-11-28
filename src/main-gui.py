@@ -145,6 +145,7 @@ def display_screen_with_text(win, text):
     :param win: (pygame.Surface) the window in which to render the end screen
     :param text: (str) the string to display
     """
+    pygame.display.set_caption(text)
     width, height = pygame.display.get_surface().get_size()
     font = pygame.font.Font('freesansbold.ttf', 32)
     text = font.render(text, True, BLACK)
@@ -221,9 +222,11 @@ def main():
                 pygame.quit()
 
     if game.winning():
-        display_screen_with_text(win, "You win!")
+        text = "You win!"
     elif game.losing():
-        display_screen_with_text(win, "You lose!")
+        text = "You lose!"
+    
+    display_screen_with_text(win, text)
 
 
 if __name__ == "__main__":
