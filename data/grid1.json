@@ -1,10 +1,6 @@
 {
-    "dimensions": {
-        "width": 16,
-        "height": 16
-    },
+    "dimensions": [16, 16],
     "final_cell": [3, 14],
-    "players_nb": 4,
     "players": {
         "main": [12, 5],
         "others": [
@@ -64,5 +60,6 @@
         [9, 14, "E"],
         [4, 15, "E"],
         [11, 15, "E"]
-    ]
+    ],
+    "thawed": []
 }
