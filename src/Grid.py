@@ -298,6 +298,13 @@ class Grid:
 
         return sorted(players, key=lambda player: player.get_n())
 
+    def coord_players(self):
+        return [player.get_coordinates() for player in self.get_players()]
+
+    def is_in(self, iterable):
+        return any(self.coord_players() == other.coord_players() for other in iterable)
+
+
 
 if __name__ == "__main__":
     import doctest
