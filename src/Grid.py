@@ -132,7 +132,7 @@ class Grid:
             other_players = [Player(x, y, i)
                              for i, (x, y) in enumerate(other_players, 1)]
 
-            players = [main_player] + other_players
+            grid.players = players = [main_player] + other_players
 
             for wall in data['walls']:
                 grid.add_wall(wall)
@@ -292,17 +292,32 @@ class Grid:
 
         return grid
 
-    def get_players(self):
-        players = [cell.get_content() for line in self.__grid for cell in line
-                                      if not cell.is_empty()]
-
-        return sorted(players, key=lambda player: player.get_n())
-
     def coord_players(self):
-        return [player.get_coordinates() for player in self.get_players()]
+        return [player.get_coordinates() for player in self.players]
 
     def is_in(self, iterable):
         return any(self.coord_players() == other.coord_players() for other in iterable)
+
+    def get_move_to(self, other):
+        self_coords, other_coords = self.coord_players(), other.coord_players()
+
+        for i in range(len(self_coords)):
+            if self_coords[i] != other_coords[i]:
+                player_to_move = i
+
+        x_from, y_from = self_coords[player_to_move]
+        x_to, y_to = other_coords[player_to_move]
+
+        if x_from < x_to:
+            direction = "E"
+        elif x_from > x_to:
+            direction = "W"
+        elif y_from < y_to:
+            direction = "S"
+        elif y_from > y_to:
+            direction = "N"
+
+        return player_to_move, direction
 
 
 

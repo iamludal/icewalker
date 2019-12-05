@@ -15,8 +15,7 @@ class Game:
 
     def __init__(self, grid):
         self.__grid = grid
-        self.__players = grid.get_players()
-        self.__nb_of_players = len(self.__players)
+        self.__players = grid.players
 
     def play(self):
 
@@ -31,7 +30,7 @@ class Game:
 
             if direction not in {'N', 'W', 'E', 'S'}:
                 raise ValueError
-            elif num not in range(self.__nb_of_players):
+            elif num not in range(len(self.__players)):
                 raise PlayerNotFoundError
 
         except ValueError:
@@ -150,9 +149,9 @@ class Game:
         """
         l = []
 
-        for n in range(self.__nb_of_players):
+        for player in self.__players:
             for direction in {"N", "S", "E", "W"}:
-                game = self.explore(n, direction)
+                game = self.explore(player.get_n(), direction)
                 l.append(game.get_grid())
 
         return l
