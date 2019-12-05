@@ -146,7 +146,7 @@ class Grid:
         except (KeyError, TypeError, ValueError):
             exit("Invalid config file.")
 
-        return grid, players
+        return grid
 
     def set_player(self, player):
         """ Set a player on the grid depending on its coordinates
@@ -291,6 +291,12 @@ class Grid:
         grid += '+-' * self.get_width() + '+'  # bottom border
 
         return grid
+
+    def get_players(self):
+        players = [cell.get_content() for line in self.__grid for cell in line
+                                      if not cell.is_empty()]
+
+        return sorted(players, key=lambda player: player.get_n())
 
 
 if __name__ == "__main__":
