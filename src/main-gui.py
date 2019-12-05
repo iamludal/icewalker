@@ -12,14 +12,17 @@ LEO = pygame.image.load("../images/weinberg.png")
 NOE = pygame.image.load("../images/noe.png")
 EW = pygame.image.load("../images/ew.png")
 MEFT = pygame.image.load("../images/meftali.png")
+ROUTIER = pygame.image.load("../images/routier.png")
 FINAL = pygame.image.load("../images/fac.png")
 THAWED = pygame.image.load("../images/black-hole.png")
+GLASSES = pygame.image.load("../images/glasses.png")
 LEO = pygame.transform.scale(LEO, (CELL_SIZE, CELL_SIZE))
 NOE = pygame.transform.scale(NOE, (CELL_SIZE, CELL_SIZE))
 EW = pygame.transform.scale(EW, (CELL_SIZE, CELL_SIZE))
 MEFT = pygame.transform.scale(MEFT, (CELL_SIZE, CELL_SIZE))
 FINAL = pygame.transform.scale(FINAL, (CELL_SIZE, CELL_SIZE))
 THAWED = pygame.transform.scale(THAWED, (CELL_SIZE, CELL_SIZE))
+GLASSES = pygame.transform.scale(GLASSES, (200, 60))
 PROF = ["E. Wegrzynowski", "L. Noé", "L. Weinberg", "S. Meftali"]
 IMG = [EW, NOE, LEO, MEFT]
 KEY_DIRECTIONS = {273: 'N', 274: 'S', 275: 'E', 276: 'W'}
@@ -131,10 +134,18 @@ def display_screen_with_text(win, text):
     text = font.render(text, True, BLACK)
     textRect = text.get_rect()
     textRect.center = (width // 2, height // 2)
+    ROUTIER_width = ROUTIER.get_rect().size[0]
+    GLASSES_width = GLASSES.get_rect().size[0]
 
-    win.fill(WHITE)
-    win.blit(text, textRect)
-    pygame.display.update()
+
+    for y in range(220):
+        pygame.time.delay(5)
+        win.fill(WHITE)
+        win.blit(text, textRect)
+        win.blit(ROUTIER, (width // 2 - ROUTIER_width // 2, 100))
+        win.blit(GLASSES, (width // 2 - GLASSES_width // 2 + 20, y))
+        pygame.display.update()
+
 
     while True:
         for event in pygame.event.get():
