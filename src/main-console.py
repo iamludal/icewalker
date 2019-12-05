@@ -9,7 +9,7 @@ def main():
     except IndexError:
         exit("You must provide a filename.")
 
-    game = Game(filename)
+    game = Game.from_file(filename)
 
     while not (game.winning() or game.losing()):
         print(game)

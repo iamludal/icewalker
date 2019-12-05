@@ -189,7 +189,7 @@ def main():
     except IndexError:
         exit("You should enter a filename")
 
-    game = Game(filename)
+    game = Game.from_file(filename)
     grid = game.get_grid()
     width, height = grid.get_width(), grid.get_height()
     win = pygame.display.set_mode((width*CELL_SIZE, height*CELL_SIZE))
