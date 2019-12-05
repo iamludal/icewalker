@@ -7,7 +7,7 @@ def main():
     except IndexError:
         exit("Error: you have to enter a filename")
 
-    game = Game(filename)
+    game = Game.from_file(filename)
 
     queue = Queue()
     visited = dict()
@@ -18,10 +18,14 @@ def main():
 
     while not queue.empty() and not solved:
         config = queue.get()
+        game = Game(config)
 
-        for grid in game.moves(config):
+        for grid in game.moves():
             if grid not in visited and game.winning():
                 solved = True
+
+            visited[grid] = config
+            queue.put(grid)
 
 
 
