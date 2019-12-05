@@ -21,11 +21,14 @@ def main():
         game = Game(config)
 
         for grid in game.moves():
-            if grid not in visited and game.winning():
-                solved = True
+            game_bis = Game(grid)
 
-            visited[grid] = config
-            queue.put(grid)
+            if not grid.is_in(visited):
+                if game_bis.winning():
+                    solved = True
+
+                visited[grid] = config
+                queue.put(grid)
 
 
 
