@@ -1,6 +1,7 @@
 from Grid import Grid
 from Player import Player
 import json
+from copy import deepcopy
 
 
 class PlayerNotFoundError(Exception):
@@ -12,8 +13,9 @@ class PlayerNotFoundError(Exception):
 
 class Game:
 
-    def __init__(self, filename):
-        self.__grid, self.__players = Grid.from_file(filename)
+    def __init__(self, grid):
+        self.__grid = grid
+        self.__players = grid.get_players()
         self.__nb_of_players = len(self.__players)
 
     def play(self):
@@ -103,9 +105,10 @@ class Game:
             self.move_player(player, (new_x, new_y), grid)
             self.next_step(num, direction)
 
-    def explore(self, player, direction):
-        self.next_step(player, direction)
-        return self.get_grid()
+    @classmethod
+    def from_file(cls, filename):
+        grid = Grid.from_file(filename)
+        return cls(grid)
 
     def winning(self):
         x, y = self.__players[0].get_coordinates()
@@ -118,6 +121,22 @@ class Game:
 
     def get_grid(self):
         return self.__grid
+
+    def explore(self, num, direction):
+        grid = deepcopy(self.get_grid())
+        g = Game(grid)
+        g.next_step(num, direction)
+        return g
+
+    def moves(self):
+        l = []
+
+        for n in len(self.__players):
+            for direction in {"N", "S", "E", "W"}:
+                game = self.explore(n, direction)
+                l.append(game.get_grid())
+
+        return l
 
     def __str__(self):
         return str(self.__grid)
