@@ -137,7 +137,6 @@ def display_screen_with_text(win, text):
     ROUTIER_width = ROUTIER.get_rect().size[0]
     GLASSES_width = GLASSES.get_rect().size[0]
 
-
     for y in range(220):
         pygame.time.delay(5)
         win.fill(WHITE)
@@ -145,7 +144,6 @@ def display_screen_with_text(win, text):
         win.blit(ROUTIER, (width // 2 - ROUTIER_width // 2, 100))
         win.blit(GLASSES, (width // 2 - GLASSES_width // 2 + 20, y))
         pygame.display.update()
-
 
     while True:
         for event in pygame.event.get():
@@ -179,6 +177,19 @@ def handle_click_event(grid, initial_number):
         return initial_number
 
 
+def usage():
+    print("To play ice walker, type in the following command:")
+    print("                                                  ")
+    print("    $ python3 main-gui.py [filename]              ")
+    print("                                                  ")
+    print("where [filename] is the path of the configuration ")
+    print("                                                  ")
+    print("Example:                                          ")
+    print("    $ python3 main-gui.py ../data/grid1.json      ")
+    print("                                                  ")
+    exit()
+
+
 def main():
     """ main function of this module
     """
@@ -187,7 +198,7 @@ def main():
     try:
         filename = sys.argv[1]
     except IndexError:
-        exit("You should enter a filename")
+        usage()
 
     game = Game.from_file(filename)
     grid = game.get_grid()
@@ -214,7 +225,7 @@ def main():
         text = "You win!"
     elif game.losing():
         text = "You lose!"
-    
+
     display_screen_with_text(win, text)
 
 
