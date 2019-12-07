@@ -35,6 +35,7 @@ class Grid:
         self.__width = width
         self.__height = height
         self.__grid = [[Cell() for x in range(width)] for y in range(height)]
+        self.players = []
 
         for line in self.__grid:
             line[-1].add_wall('E')
@@ -60,15 +61,21 @@ class Grid:
 
         if type(x) != int or type(y) != int:
             raise TypeError("x and y must be positive integers")
-        elif not x in range(self.get_width()) or y not in range(self.get_height()):
+        elif x not in range(self.get_width()) or y not in range(self.get_height()):
             raise ValueError("x and y must be in the grid's dimensions")
 
         return self.__grid[y][x]
 
     def get_height(self):
+        """ Return the height of the grid
+        :return: (int) the height
+        """
         return self.__height
 
     def get_width(self):
+        """ Return the width of the grid
+        :return: (int) the width
+        """
         return self.__width
 
     def add_wall(self, wall):
@@ -105,7 +112,7 @@ class Grid:
         :return: (tuple) the newly created instance of the grid + the list
             of players
         :UC: filename.endswith(".json")
-        
+
         """
 
         try:
@@ -132,7 +139,8 @@ class Grid:
             other_players = [Player(x, y, i)
                              for i, (x, y) in enumerate(other_players, 1)]
 
-            grid.players = players = [main_player] + other_players
+            players = [main_player] + other_players
+            grid.players = []
 
             for wall in data['walls']:
                 grid.add_wall(wall)
@@ -166,6 +174,10 @@ class Grid:
 
         """
         x, y = player.get_coordinates()
+
+        if player not in self.players:
+            self.players.append(player)
+
         self.get_cell(x, y).set_content(player)
 
     def __str__(self):
@@ -293,12 +305,59 @@ class Grid:
         return grid
 
     def coord_players(self):
+        """ Returns a list containing the coordinates of all players
+
+        :return: (list) all the coordinates
+        :Examples:
+
+        >>> from Player import Player
+        >>> grid = Grid(4, 4)
+        >>> p1 = Player(1, 1, 0)
+        >>> p2 = Player(2, 3, 1)
+        >>> grid.set_player(p1)
+        >>> grid.set_player(p2)
+        >>> grid.coord_players()
+        [(1, 1), (2, 3)]
+        """
         return [player.get_coordinates() for player in self.players]
 
     def is_in(self, iterable):
-        return any(self.coord_players() == other.coord_players() for other in iterable)
+        """ Returns True if the grid is in a set of grids, False otherwise
+
+        :param iterable: (iterable) a set/list/tuple of grids
+        :return: (bool) true if the grid is inside the iterable
+        :UC: all(isinstance(elt, Grid) for elt in iterable)
+        :Examples:
+
+        >>> g1 = Grid(3, 3)
+        >>> g2 = Grid(3, 3)
+        >>> p1 = Player(1, 1, 0)
+        >>> g2.set_player(p1)
+        >>> g1.is_in([g2])
+        False
+        >>> g1.set_player(p1)
+        >>> g1.is_in([g2])
+        True
+        """
+
+        return any(self.coord_players() == other.coord_players()
+                   for other in iterable)
 
     def get_move_to(self, other):
+        """ Get the move to go from a grid to another
+
+        :param other: (Grid) the other grid
+        :return: (tuple) the player to move and the direction
+        :UC: self players and other players must be the same and the grid must
+            have equal lengths
+        :Examples:
+        >>> g1 = Grid(3, 3)
+        >>> g2 = Grid(3, 3)
+        >>> g1.set_player(Player(0, 1, 0))
+        >>> g2.set_player(Player(2, 1, 0))
+        >>> g1.get_move_to(g2)
+        (0, 'E')
+        """
         self_coords, other_coords = self.coord_players(), other.coord_players()
 
         for i in range(len(self_coords)):
@@ -318,7 +377,6 @@ class Grid:
             direction = "N"
 
         return player_to_move, direction
-
 
 
 if __name__ == "__main__":
