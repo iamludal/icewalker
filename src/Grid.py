@@ -199,7 +199,7 @@ class Grid:
             self.players.append(player)
 
         self.get_cell(x, y).set_content(player)
-    
+
         if player not in self.players:
             self.players.insert(player.get_n(), player)
 
@@ -362,8 +362,7 @@ class Grid:
         >>> g1.is_in([g2])
         True
         """
-
-        return any(self.coord_players() == other.coord_players()
+        return all(self.coord_players() == other.coord_players()
                    for other in iterable)
 
     def get_move_to(self, other):
