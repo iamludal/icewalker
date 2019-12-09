@@ -12,6 +12,22 @@ class PlayerNotFoundError(Exception):
 
 
 class Game:
+    """ This class handles all the Ice Walker game's logic, such 
+    as the methods to move the players, to play, to know if the
+    game state is winning or losing...
+
+    >>> grid = Grid(3, 3)
+    >>> grid.get_cell(2, 2).set_final_cell()
+    >>> p = Player(1, 0, 0)
+    >>> grid.set_player(p)
+    >>> game = Game(grid)
+    >>> game.winning()
+    False
+    >>> game.losing()
+    False
+    >>> game.player_can_move(p.get_coordinates(), 'N', grid)
+    False
+    """
 
     def __init__(self, grid):
         self.__grid = grid
@@ -161,3 +177,7 @@ class Game:
 
     def __repr__(self):
         return str(self)
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod(verbose=True)

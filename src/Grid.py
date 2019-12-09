@@ -5,6 +5,25 @@ from json.decoder import JSONDecodeError
 
 
 class Grid:
+    """ This class represents a Grid of the Ice Walker game, which
+    means the main board on which the players are
+
+    Examples:
+    >>> grid = Grid(2, 2)
+    >>> grid.add_wall([0, 1, 'E'])
+    >>> grid.get_cell(0, 1)
+     |
+    >>> p = Player(1, 0, 0)
+    >>> grid.set_player(p)
+    >>> grid.get_cell(1, 0)
+    0|
+    >>> print(grid)
+    +-+-+
+    |  0|
+    +   +
+    | | |
+    +-+-+
+    """
 
     def __init__(self, width, height):
         """ Create a grid to represent a new icewalker game
@@ -35,6 +54,7 @@ class Grid:
         self.__width = width
         self.__height = height
         self.__grid = [[Cell() for x in range(width)] for y in range(height)]
+        self.players = []
 
         for line in self.__grid:
             line[-1].add_wall('E')
@@ -167,6 +187,9 @@ class Grid:
         """
         x, y = player.get_coordinates()
         self.get_cell(x, y).set_content(player)
+    
+        if player not in self.players:
+            self.players.insert(player.get_n(), player)
 
     def __str__(self):
         """ Draw the grid
