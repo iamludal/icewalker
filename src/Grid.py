@@ -9,6 +9,7 @@ class Grid:
     means the main board on which the players are
 
     Examples:
+
     >>> grid = Grid(2, 2)
     >>> grid.add_wall([0, 1, 'E'])
     >>> grid.get_cell(0, 1)
@@ -373,6 +374,7 @@ class Grid:
         :UC: self players and other players must be the same and the grid must
             have equal lengths
         :Examples:
+
         >>> g1 = Grid(3, 3)
         >>> g2 = Grid(3, 3)
         >>> g1.set_player(Player(0, 1, 0))
