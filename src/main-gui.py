@@ -12,7 +12,6 @@ LEO = pygame.image.load("../images/weinberg.png")
 NOE = pygame.image.load("../images/noe.png")
 EW = pygame.image.load("../images/ew.png")
 MEFT = pygame.image.load("../images/meftali.png")
-ROUTIER = pygame.image.load("../images/routier.png")
 FINAL = pygame.image.load("../images/fac.png")
 THAWED = pygame.image.load("../images/black-hole.png")
 GLASSES = pygame.image.load("../images/glasses.png")
@@ -123,26 +122,40 @@ def render(win, grid):
     pygame.display.update()
 
 
-def display_screen_with_text(win, text):
-    """ Display the winning screen in the window
+def display_end_screen(win, text, game_status):
+    """ Display the end screen in the window
     :param win: (pygame.Surface) the window in which to render the end screen
     :param text: (str) the string to display
     """
+    if game_status == 'win':
+        text = 'You win!'
+        ROUTIER = pygame.image.load("../images/routier.png")
+        GLASSES_width = GLASSES.get_rect().size[0]
+    elif game_status == 'lose':
+        text = 'You lose!'
+        ROUTIER = pygame.image.load("../images/routier-cry.png")
+
     pygame.display.set_caption(text)
     width, height = pygame.display.get_surface().get_size()
     font = pygame.font.Font('freesansbold.ttf', 32)
     text = font.render(text, True, BLACK)
     textRect = text.get_rect()
     textRect.center = (width // 2, height // 2)
-    ROUTIER_width = ROUTIER.get_rect().size[0]
-    GLASSES_width = GLASSES.get_rect().size[0]
 
-    for y in range(220):
-        pygame.time.delay(5)
+    ROUTIER_width = ROUTIER.get_rect().size[0]
+
+    if game_status == 'win':
+        for y in range(220):
+            pygame.time.delay(5)
+            win.fill(WHITE)
+            win.blit(text, textRect)
+            win.blit(ROUTIER, (width // 2 - ROUTIER_width // 2, 100))
+            win.blit(GLASSES, (width // 2 - GLASSES_width // 2 + 20, y))
+            pygame.display.update()
+    else:
         win.fill(WHITE)
         win.blit(text, textRect)
         win.blit(ROUTIER, (width // 2 - ROUTIER_width // 2, 100))
-        win.blit(GLASSES, (width // 2 - GLASSES_width // 2 + 20, y))
         pygame.display.update()
 
     while True:
@@ -223,10 +236,12 @@ def main():
 
     if game.winning():
         text = "You win!"
+        game_status = "win"
     elif game.losing():
         text = "You lose!"
+        game_status = "lose"
 
-    display_screen_with_text(win, text)
+    display_end_screen(win, text, game_status)
 
 
 if __name__ == "__main__":
