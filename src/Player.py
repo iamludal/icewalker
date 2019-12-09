@@ -1,8 +1,17 @@
 
 class Player:
+    """ This class represents an Ice Walker player.
+
+    Examples:
+    >>> player = Player(1, 2, 0)
+    >>> player.get_coordinates()
+    (1, 2)
+    >>> player.get_n()
+    0
+    """
 
     def __init__(self, x, y, n):
-        """ Creation a new icewalker Player
+        """ Creates a new icewalker Player
 
         :param x: (int) the x coordinate of the player
         :param y: (int) the y coordinate of the player

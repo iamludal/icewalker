@@ -1,5 +1,33 @@
 
 class Cell:
+    """ This class represents a cell of the Grid class. The cells
+    can be thawed, empty, final cell...
+
+    Examples:
+    >>> cell = Cell()
+    >>> cell.is_empty()
+    True
+    >>> cell.is_thawed()
+    False
+    >>> cell.is_final_cell()
+    False
+    >>> cell.set_content(3)
+    >>> cell.is_empty()
+    False
+    >>> cell.get_content()
+    3
+    >>> cell.thaw()
+    >>> cell.is_thawed()
+    True
+    >>> cell.get_walls()
+    set()
+    >>> cell.add_wall("E")
+    >>> cell.get_walls()
+    {'E'}
+    >>> cell
+    3|
+    """
+    
 
     def __init__(self):
         """ Create a new cell for the icewalker grid
