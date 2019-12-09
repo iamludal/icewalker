@@ -11,6 +11,17 @@ How to use it ?
   (to play with the graphical interface, where grid is a grid from the data/ folder)
 
 
+How to solve a game ?
+=====================
+
+To solve a game, move into the src/ folder, open up
+a terminal and just type in the following command:
+
+  $ python3 Solver.py [config]
+  (where [config] is the path of the config file)
+
+    Example:
+      $python3 Solver.py ../data/grid4.json
 
 
 Changelog
