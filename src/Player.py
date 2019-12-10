@@ -2,7 +2,8 @@
 class Player:
     """ This class represents an Ice Walker player.
 
-    Examples:
+    :Examples:    
+
     >>> player = Player(1, 2, 0)
     >>> player.get_coordinates()
     (1, 2)

@@ -8,7 +8,7 @@ class Grid:
     """ This class represents a Grid of the Ice Walker game, which
     means the main board on which the players are
 
-    Examples:
+    :Examples:
 
     >>> grid = Grid(2, 2)
     >>> grid.add_wall([0, 1, 'E'])

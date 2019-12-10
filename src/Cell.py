@@ -3,7 +3,8 @@ class Cell:
     """ This class represents a cell of the Grid class. The cells
     can be thawed, empty, final cell...
 
-    Examples:
+    :Examples:
+
     >>> cell = Cell()
     >>> cell.is_empty()
     True
