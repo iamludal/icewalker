@@ -31,11 +31,11 @@ def main():
                 visited[grid] = config
                 queue.put(grid)
 
-    path = list()
-
     if not solved:
         print("Not solvable")
         return
+        
+    path = list()
 
     while solution in visited:
         path.append(solution)

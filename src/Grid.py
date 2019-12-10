@@ -195,9 +195,6 @@ class Grid:
         """
         x, y = player.get_coordinates()
 
-        if player not in self.players:
-            self.players.append(player)
-
         self.get_cell(x, y).set_content(player)
 
         if player not in self.players:
